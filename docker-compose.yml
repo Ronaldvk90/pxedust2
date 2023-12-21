@@ -13,13 +13,21 @@ services:
        - "69:69/udp"
        restart: always
    webserver:
-      image: nginx:alpine
+      build: ./webserver/
       ports:
       - 80:80
       volumes:
-      - ./webserver:/usr/share/nginx/html
+      - ./webserver/www:/var/www/html/
+      networks:
+      - internal
       restart: always
    php: 
-      image: php:latest
+      image: php:fpm-alpine
       volumes:
-      - ./webserver:/usr/src/pxedust
+      - ./webserver/www:/var/www/html/
+      networks:
+      - internal
+      restart: always
+networks:
+   internal:
+      driver: bridge
