@@ -1,0 +1,19 @@
+#!ipxe
+
+#================ Main Menu =================
+menu PXEdust Bootserver
+item
+item debian		Boot Debian stable x86_64 Installer
+item fedora39	Boot Fedora 39 x86_64 installer
+item
+choose target && goto ${target}
+#============ Main Menu Options =============
+:debian
+chain ${url}/debian/debian.ipxe
+
+:fedora39
+chain ${url}/fedora/fedora39.ipxe
+
+#============== Main Menu End ===============#
+
+set url=192.168.1.1 #Substitude the ip address for your own.

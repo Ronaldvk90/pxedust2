@@ -1,0 +1,25 @@
+version: '3'
+services:
+   dnsmasq:
+      build: ./dnsmasq/
+      network_mode: "host"
+      env_file: ./.env
+      cap_add:
+      - NET_ADMIN
+      restart: always
+   tftp:
+       build: ./tftp/
+       ports:
+       - "69:69/udp"
+       restart: always
+   webserver:
+      image: nginx:alpine
+      ports:
+      - 80:80
+      volumes:
+      - ./webserver:/usr/share/nginx/html
+      restart: always
+   php: 
+      image: php:latest
+      volumes:
+      - ./webserver:/usr/src/pxedust

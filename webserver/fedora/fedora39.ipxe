@@ -1,0 +1,11 @@
+#!ipxe
+  
+# Set source URI
+set mirror http://fedora.mirror.wearetriple.com/linux/releases/39/
+
+set repo ${mirror}/Everything/x86_64/os
+
+# Start installer
+kernel ${repo}/images/pxeboot/vmlinuz initrd=initrd.img ip=dhcp inst.repo=${repo}
+initrd ${repo}/images/pxeboot/initrd.img
+boot

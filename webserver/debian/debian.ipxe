@@ -1,0 +1,5 @@
+#!ipxe
+
+kernel http://ftp.nluug.nl/pub/os/Linux/distr/debian/dists/stable/main/installer-amd64/current/images/netboot/debian-installer/amd64/linux initrd=initrd.gz
+initrd http://ftp.nluug.nl/pub/os/Linux/distr/debian/dists/stable/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz 
+boot
