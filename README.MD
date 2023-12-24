@@ -13,8 +13,7 @@ DNSMASQ_INTERFACE must correspond with the interface Dnsmasq should listen to! I
 IPV4 is the ip address of your server/interface.
 SUBNET is the subnetmask used by your network/interface.
 
-In the menu.ipxe file from the webserver container's www folder, substitude the ip address for the IPV4 your server/interface is using.
-#*note! If you are using a php menu script, also ajust menu.ipxe to "SubstituteWithDesiredName.php"*
+In the menu.php file from the webserver container's www folder, substitude the ip address of the "url" variable for the IPV4 your server/interface is using.
 
 Next is the embed.ipxe file in the tftp container folder. do exactly the same as what you did with the webserver IP.
 

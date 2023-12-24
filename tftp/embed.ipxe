@@ -2,5 +2,5 @@
 
 dhcp
 
-chain http://192.168.1.1/menu.ipxe #Substitude the ip address for your own.
+chain http://192.168.1.1/menu.php #Substitude the ip address for your own.
 boot
