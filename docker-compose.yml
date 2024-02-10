@@ -11,6 +11,8 @@ services:
        build: ./tftp/
        ports:
        - "69:69/udp"
+       volumes:
+       - tftpboot:/var/tftpboot
        restart: always
    webserver:
       build: ./webserver/
@@ -28,6 +30,9 @@ services:
       networks:
       - internal
       restart: always
+volumes:
+   tftpboot:
+      external: false
 networks:
    internal:
       driver: bridge
