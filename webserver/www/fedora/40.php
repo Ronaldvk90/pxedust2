@@ -3,7 +3,7 @@ header ( "Content-type: text/plain" );
 echo "#!ipxe\n\n";
 
 // Set source URI
-echo "set mirror http://fedora.mirror.wearetriple.com/linux/releases/39/\n";
+echo "set mirror http://fedora.mirror.wearetriple.com/linux/releases/40/\n";
 echo "set repo \${mirror}/Everything/x86_64/os\n\n";
 
 // Start installer

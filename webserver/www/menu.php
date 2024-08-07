@@ -4,13 +4,13 @@ echo "#!ipxe\n\n";
 echo "console --picture http://boot.ipxe.org/ipxe.png\n";
 
 // Change the address according to your needs.
-$url = "http://192.168.1.1";
+$url = "http://".$_ENV["IPV4"];
 
 //================ Main Menu =================
 echo "menu PXEdust2 Bootserver\n";
 echo "\n";
 echo "item debian                   Debian stable x86_64\n";
-echo "item fedora                   Fedora Everything 39 x86_64\n";
+echo "item fedora                   Fedora Everything 40 x86_64\n";
 echo "\n";
 echo "item shell            Drop in the IPXE shell\n";
 echo "choose target && goto \${target}\n\n";
@@ -21,7 +21,7 @@ echo "chain $url/debian/debian.php\n";
 echo "boot\n\n";
 
 echo ":fedora\n";
-echo "chain $url/fedora/39.php\n";
+echo "chain $url/fedora/40.php\n";
 echo "boot\n\n";
 
 echo ":shell\n";

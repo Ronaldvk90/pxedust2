@@ -1,23 +1,30 @@
-FROM alpine:3.19 as buildcontainer
+FROM alpine:3.20 as buildcontainer
 RUN apk add --no-cache git gcc binutils make perl xz-dev mtools libc-dev
 RUN git clone https://github.com/ipxe/ipxe.git
 WORKDIR /ipxe/src
 RUN sed -i '/CONSOLE_CMD/c #define CONSOLE_CMD' config/general.h
-RUN sed -i '/DOWNLOAD_PROTO_HTTPS/c #define DOWNLOAD_PROTO_HTTPS' config/general.h
-RUN sed -i '/IMAGE_TRUST_CMD/c #define IMAGE_TRUST_CMD' config/general.h
 RUN sed -i '/CONSOLE_FRAMEBUFFER/c #define CONSOLE_FRAMEBUFFER' config/console.h
-COPY ./embed.ipxe .
 
 FROM buildcontainer as buildBiosBetter
-RUN make bin/undionly.kpxe EMBED=embed.ipxe
+RUN make bin/ipxe.lkrn
 
 FROM buildcontainer as buildEfiBetter
-RUN make bin-x86_64-efi/snponly.efi EMBED=embed.ipxe
+RUN make bin-x86_64-efi/snponly.efi
 
-FROM alpine:3.19
+FROM alpine:3.20
 RUN apk add --no-cache tftp-hpa
-COPY --from=buildBiosBetter /ipxe/src/bin/undionly.kpxe /var/tftpboot/undionly.0
+RUN wget https://mirrors.edge.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.gz -O /syslinux.tar.gz
+RUN tar xvfz syslinux.tar.gz
+RUN mkdir -p /var/tftpboot/pxelinux.cfg
+RUN cp /syslinux*/bios/core/pxelinux.0 /var/tftpboot/pxelinux.0
+RUN cp /syslinux*/bios/com32/elflink/ldlinux/ldlinux.c32 /var/tftpboot/ldlinux.c32
+COPY ./default /var/tftpboot/pxelinux.cfg/default
+RUN rm -rf /syslinux*
+COPY --from=buildBiosBetter /ipxe/src/bin/ipxe.lkrn /var/tftpboot/ipxe.lkrn
 COPY --from=buildEfiBetter  /ipxe/src/bin-x86_64-efi/snponly.efi /var/tftpboot/snponly.efi
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+
 EXPOSE 69/udp
-ENTRYPOINT ["in.tftpd"]
-CMD ["-L", "--secure", "/var/tftpboot"]
+ENTRYPOINT ["/entrypoint.sh"]

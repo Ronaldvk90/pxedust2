@@ -2,17 +2,18 @@ services:
    dnsmasq:
       build: ./dnsmasq/
       network_mode: "host"
-      env_file: ./.env
+      env_file: "environment"
       cap_add:
       - NET_ADMIN
       restart: always
    tftp:
-       build: ./tftp/
-       ports:
-       - "69:69/udp"
-       volumes:
-       - tftpboot:/var/tftpboot
-       restart: always
+      build: ./tftp/
+      env_file: "environment"
+      ports:
+      - "69:69/udp"
+      volumes:
+      - tftpboot:/var/tftpboot
+      restart: always
    webserver:
       build: ./webserver/
       ports:
@@ -24,6 +25,7 @@ services:
       restart: always
    php: 
       image: php:fpm-alpine
+      env_file: "environment"
       volumes:
       - ./webserver/www:/var/www/html/
       networks:
