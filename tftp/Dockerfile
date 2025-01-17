@@ -1,4 +1,4 @@
-FROM alpine:3.20 as buildcontainer
+FROM alpine:3.21 as buildcontainer
 RUN apk add --no-cache git gcc binutils make perl xz-dev mtools libc-dev
 RUN git clone https://github.com/ipxe/ipxe.git
 WORKDIR /ipxe/src
@@ -11,7 +11,7 @@ RUN make bin/ipxe.lkrn
 FROM buildcontainer as buildEfiBetter
 RUN make bin-x86_64-efi/snponly.efi
 
-FROM alpine:3.20
+FROM alpine:3.21
 RUN apk add --no-cache tftp-hpa
 RUN wget https://mirrors.edge.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.gz -O /syslinux.tar.gz
 RUN tar xvfz syslinux.tar.gz
