@@ -1,13 +1,15 @@
 services:
    dnsmasq:
-      build: ./dnsmasq/
+      build: dnsmasq/.
+      image: ronaldvk90/dnsmasq
       network_mode: "host"
       env_file: "environment"
       cap_add:
       - NET_ADMIN
       restart: always
    tftp:
-      build: ./tftp/
+      build: tftp/.
+      image: ronaldvk90/tftp
       env_file: "environment"
       ports:
       - "69:69/udp"
