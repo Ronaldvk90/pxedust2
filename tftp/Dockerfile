@@ -1,30 +1,47 @@
-FROM alpine:3.21 as buildcontainer
+### Building compile container
+FROM --platform=linux/amd64 alpine:3.22 AS buildcontainer
+
+### Install dependencies
 RUN apk add --no-cache git gcc binutils make perl xz-dev mtools libc-dev
 RUN git clone https://github.com/ipxe/ipxe.git
+
+### Preparing iPXE build environment 
 WORKDIR /ipxe/src
 RUN sed -i '/CONSOLE_CMD/c #define CONSOLE_CMD' config/general.h
 RUN sed -i '/CONSOLE_FRAMEBUFFER/c #define CONSOLE_FRAMEBUFFER' config/console.h
 
-FROM buildcontainer as buildBiosBetter
+### Build EFI
+FROM --platform=linux/amd64 buildcontainer AS efibuildcontainer 
+RUN make bin-x86_64-efi/ipxe.efi
+
+### Build BIOS
+FROM --platform=linux/amd64 buildcontainer AS biosbuildcontainer
+RUN apk add --no-cache wget
 RUN make bin/ipxe.lkrn
+WORKDIR /
+RUN wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.gz
+RUN tar xvfz syslinux-6.03.tar.gz
 
-FROM buildcontainer as buildEfiBetter
-RUN make bin-x86_64-efi/snponly.efi
-
-FROM alpine:3.21
+### Runtime container
+FROM alpine:3.22
 RUN apk add --no-cache tftp-hpa
-RUN wget https://mirrors.edge.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.gz -O /syslinux.tar.gz
-RUN tar xvfz syslinux.tar.gz
-RUN mkdir -p /var/tftpboot/pxelinux.cfg
-RUN cp /syslinux*/bios/core/pxelinux.0 /var/tftpboot/pxelinux.0
-RUN cp /syslinux*/bios/com32/elflink/ldlinux/ldlinux.c32 /var/tftpboot/ldlinux.c32
-COPY ./default /var/tftpboot/pxelinux.cfg/default
-RUN rm -rf /syslinux*
-COPY --from=buildBiosBetter /ipxe/src/bin/ipxe.lkrn /var/tftpboot/ipxe.lkrn
-COPY --from=buildEfiBetter  /ipxe/src/bin-x86_64-efi/snponly.efi /var/tftpboot/snponly.efi
-COPY ./entrypoint.sh /entrypoint.sh
+
+### Copy all PXE files to destination
+COPY --from=efibuildcontainer /ipxe/src/bin-x86_64-efi/ipxe.efi /var/tftpboot/ipxe.efi
+COPY --from=biosbuildcontainer /ipxe/src/bin/ipxe.lkrn /var/tftpboot/ipxe.lkrn
+COPY --from=biosbuildcontainer /syslinux-6.03/bios/com32/libutil/libutil.c32 /var/tftpboot/
+COPY --from=biosbuildcontainer /syslinux-6.03/bios/core/pxelinux.0 /var/tftpboot/
+COPY --from=biosbuildcontainer /syslinux-6.03/bios/com32/elflink/ldlinux/ldlinux.c32 /var/tftpboot/
+COPY --from=biosbuildcontainer /syslinux-6.03/bios/com32/menu/menu.c32 /var/tftpboot/
+#RUN mkdir /var/tftpboot/pxelinux.cfg
+#COPY default /var/tftpboot/pxelinux.cfg/default
+
+### entrypoint script preperation
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-
+### tftp port opened
 EXPOSE 69/udp
-ENTRYPOINT ["/entrypoint.sh"]
+
+### Entrypoint:
+ENTRYPOINT [ "/entrypoint.sh" ]

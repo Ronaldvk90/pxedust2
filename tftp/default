@@ -1,5 +1,4 @@
-DEFAULT kettinglader
-                  
-LABEL kettinglader  
-KERNEL ipxe.lkrn   
-INITRD autoexec.ipxe
+DEFAULT iPXE
+  LABEL iPXE
+  KERNEL ipxe.lkrn
+  initrd autoexec.ipxe

@@ -3,19 +3,20 @@ services:
       build: dnsmasq/.
       image: ronaldvk90/dnsmasq
       network_mode: "host"
-      env_file: "environment"
       cap_add:
       - NET_ADMIN
       restart: always
+      env_file: .env
    tftp:
       build: tftp/.
       image: ronaldvk90/tftp
-      env_file: "environment"
       ports:
       - "69:69/udp"
       volumes:
       - tftpboot:/var/tftpboot
+      - ./tftp/default:/var/tftpboot/pxelinux.cfg/default
       restart: always
+      env_file: .env
    webserver:
       build: ./webserver/
       ports:
@@ -25,14 +26,15 @@ services:
       networks:
       - internal
       restart: always
+      env_file: .env
    php: 
       image: php:fpm-alpine
-      env_file: "environment"
       volumes:
       - ./webserver/www:/var/www/html/
       networks:
       - internal
       restart: always
+      env_file: .env
 volumes:
    tftpboot:
       external: false

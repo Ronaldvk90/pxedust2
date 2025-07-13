@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cat > /var/tftpboot/autoexec.ipxe <<EOF
+cat <<EOF > /var/tftpboot/autoexec.ipxe
 #!ipxe
 dhcp
 chain http://$IPV4/menu.php
