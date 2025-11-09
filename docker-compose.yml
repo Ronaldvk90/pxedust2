@@ -5,6 +5,7 @@ services:
       network_mode: "host"
       cap_add:
       - NET_ADMIN
+      - NET_RAW
       restart: always
       env_file: .env
    tftp:
