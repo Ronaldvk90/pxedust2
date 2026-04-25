@@ -11,8 +11,7 @@ services:
    tftp:
       build: tftp/.
       image: ronaldvk90/tftp
-      ports:
-      - "69:69/udp"
+      network_mode: "host"
       volumes:
       - tftpboot:/var/tftpboot
       - ./tftp/default:/var/tftpboot/pxelinux.cfg/default
