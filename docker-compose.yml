@@ -1,7 +1,7 @@
 services:
    dnsmasq:
       build: dnsmasq/.
-      image: ronaldvk90/dnsmasq
+      image: docker.io/ronaldvk90/dnsmasq
       network_mode: "host"
       cap_add:
       - NET_ADMIN
@@ -10,7 +10,7 @@ services:
       env_file: .env
    tftp:
       build: tftp/.
-      image: ronaldvk90/tftp
+      image: docker.io/ronaldvk90/tftp
       network_mode: "host"
       volumes:
       - tftpboot:/var/tftpboot
@@ -28,7 +28,7 @@ services:
       restart: always
       env_file: .env
    php: 
-      image: php:fpm-alpine
+      image: docker.io/php:fpm-alpine
       volumes:
       - ./webserver/www:/var/www/html/
       networks:
