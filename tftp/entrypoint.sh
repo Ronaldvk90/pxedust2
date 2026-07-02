@@ -6,4 +6,4 @@ dhcp
 chain http://$IPV4/menu.php
 EOF
 
-in.tftpd -L --secure /var/tftpboot
+in.tftpd -L -4 --secure /var/tftpboot
