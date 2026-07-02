@@ -1,5 +1,5 @@
 ### Building compile container
-FROM --platform=linux/amd64 alpine:3.22 AS buildcontainer
+FROM --platform=linux/amd64 alpine:3.24 AS buildcontainer
 
 ### Install dependencies
 RUN apk add --no-cache git gcc binutils make perl xz-dev mtools libc-dev
@@ -23,7 +23,7 @@ RUN wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.
 RUN tar xvfz syslinux-6.03.tar.gz
 
 ### Runtime container
-FROM alpine:3.22
+FROM alpine:3.24
 RUN apk add --no-cache tftp-hpa
 
 ### Copy all PXE files to destination
