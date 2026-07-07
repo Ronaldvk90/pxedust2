@@ -1,6 +1,7 @@
 # Welcome to PxeDust 2.0!
+**Note! BIOS is deprecated and now no longer supported!**
 
-I deliver a OOBE dnsmasq server, tftp and nginx and PHP.
+I deliver a OOBE dnsmasq server, tftp and nginx and PHP bootserver.
 
 For winpe you can use wimboot. The iPXE project has detailed information how to build and install winpe.
 http://www.ipxe.org/wimboot
