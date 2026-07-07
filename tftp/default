@@ -1,4 +1,0 @@
-DEFAULT iPXE
-  LABEL iPXE
-  KERNEL ipxe.lkrn
-  initrd autoexec.ipxe

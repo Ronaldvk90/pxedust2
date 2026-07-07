@@ -12,9 +12,6 @@ services:
       build: tftp/.
       image: docker.io/ronaldvk90/tftp
       network_mode: "host"
-      volumes:
-      - tftpboot:/var/tftpboot
-      - ./tftp/default:/var/tftpboot/pxelinux.cfg/default
       restart: always
       env_file: .env
    webserver:
@@ -35,9 +32,6 @@ services:
       - internal
       restart: always
       env_file: .env
-volumes:
-   tftpboot:
-      external: false
 networks:
    internal:
       driver: bridge
