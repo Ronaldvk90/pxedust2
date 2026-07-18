@@ -12,14 +12,14 @@ RUN sed -i '/CONSOLE_FRAMEBUFFER/c #define CONSOLE_FRAMEBUFFER' config/console.h
 
 ### Build EFI
 FROM --platform=linux/amd64 buildcontainer AS efibuildcontainer 
-RUN make bin-x86_64-efi/ipxe.efi
+RUN make bin-x86_64-efi/snponly.efi
 
 ### Runtime container
 FROM alpine:3.24
 RUN apk add --no-cache tftp-hpa
 
 ### Copy the PXE file to destination
-COPY --from=efibuildcontainer /ipxe/src/bin-x86_64-efi/ipxe.efi /var/tftpboot/ipxe.efi
+COPY --from=efibuildcontainer /ipxe/src/bin-x86_64-efi/snponly.efi /var/tftpboot/snponly.efi
 
 ### entrypoint script preperation
 COPY entrypoint.sh /entrypoint.sh
